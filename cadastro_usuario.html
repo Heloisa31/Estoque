@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastrar Produto</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>Cadastrar Usuário</h1>
+    <form id="form-usuario">
+
+
+        <label for="nome">Nome do usuário:</label>
+        <input type="text" id="nome" name="nome" required>
+
+        <label for="matricula">Matrícula do usuário:</label>
+        <input type="number" id="matricula" name="matricula" required>
+
+        <label for="funcao">Função do usuário:</label>
+        <input type="text" id="funcao" name="funcao" required>
+
+        <button type="submit">Cadastrar</button>
+        <div id="mensagem"></div>
+       
+    </form>
+
+    <script>
+        const form = document.getElementById('form-usuario');
+        const mensagem = document.getElementById('mensagem');
+
+        form.addEventListener('submit',(e) =>{
+            e.preventDefault();
+
+          const dados = new FormData(form);
+        
+          fetch('inserir_usuario.php', {
+            method: 'POST',
+            body: dados
+          })
+          .then(res => res.json())
+          .then(resposta =>{
+            if(resposta.sucesso){
+                mensagem.innerHTML = `<span style="color:green;">${resposta.mensagem}</span>`;
+                form.reset();
+            }else{
+                mensagem.innerHTML = `<span style="color:red;">${resposta.erro}</span>`;
+            }
+          })
+          .catch(err => {
+            mensagem.innerHTML = `<span style="color:red;">Erro ao enviar dados.</span>`;
+            console.error(err);
+          })
+        })
+    </script>
+    <a href="usuarios.html" class="link-basico">Usuários cadastrados</a>
+</body>
+</html>

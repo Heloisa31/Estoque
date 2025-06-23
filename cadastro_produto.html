@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastrar Produto</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>Cadastrar Produto</h1>
+    <form id="form-produto">
+        <label for="nome">Nome do Produto:</label>
+        <input type="text" id="nome" name="nome" required>
+
+        <label for="quantidade">Quantidade:</label>
+        <input type="number" id="quantidade" name="quantidade" required>
+
+        <label for="preco">Preço (R$):</label>
+        <input type="number" id="preco" name="preco" step="0.01" required>
+
+        <button type="submit">Cadastrar</button>
+        <div id="mensagem"></div>
+    </form>
+
+    <script>
+        const form = document.getElementById('form-produto');
+        const mensagem = document.getElementById('mensagem');
+
+        form.addEventListener('submit',(e) =>{
+            e.preventDefault();
+
+          const dados = new FormData(form);
+        
+          fetch('inserir_produto.php', {
+            method: 'POST',
+            body: dados
+          })
+          .then(res => res.json())
+          .then(resposta =>{
+            if(resposta.sucesso){
+                mensagem.innerHTML = `<span style="color:green;">${resposta.mensagem}</span>`;
+                form.reset();
+            }else{
+                mensagem.innerHTML = `<span style="color:red;">${resposta.erro}</span>`;
+            }
+          })
+          .catch(err => {
+            mensagem.innerHTML = `<span style="color:red;">Erro ao enviar dados.</span>`;
+            console.error(err);
+          })
+        })
+    </script>
+    <a href="produtos.html" class="link-basico">Estoque</a>
+</body>
+</html>
